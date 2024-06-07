@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  api:
+    image: fastapi-odm/api:${VERSION}
+    command: --reload
+    tty: true
+    stdin_open: true
+    ports:
+      - 8000:8000
+    volumes:
+      - ./src:/code/src
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:7.0.11
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DB}
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongodb/data:/data/db
+      - ./mongodb/config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    restart: always
