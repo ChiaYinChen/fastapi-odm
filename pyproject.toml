@@ -12,6 +12,10 @@ pydantic-settings = "^2.3.1"
 beanie = "^1.26.0"
 
 
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.0.0"
+tox = "^4.15.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
