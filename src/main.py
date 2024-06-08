@@ -1,9 +1,15 @@
 """Main app."""
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-app = FastAPI()
+from .db.mongodb import start_async_mongodb
 
 
-@app.get("/")
-async def read_root():
-    return {"message": "Hello FastAPI"}
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize application services."""
+    await start_async_mongodb()
+    yield
+
+app = FastAPI(lifespan=lifespan)
