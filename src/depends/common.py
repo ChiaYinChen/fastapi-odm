@@ -2,6 +2,7 @@
 from fastapi import Query
 
 from ..schemas.pagination import PaginationParams
+from ..schemas.sorting import SortingParams, SortOrder
 
 
 def get_pagination_params(
@@ -10,3 +11,11 @@ def get_pagination_params(
 ) -> PaginationParams:
     """Get pagination parameters."""
     return PaginationParams(page=page, per_page=per_page)
+
+
+def get_sorting_params(
+    sort: str = Query("created_at", description="The field to sort by"),
+    order: SortOrder = Query(SortOrder.ASC, description="The sorting order.")
+) -> PaginationParams:
+    """Get sorting parameters."""
+    return SortingParams(sort=sort, order=order)

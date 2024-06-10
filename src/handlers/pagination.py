@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, TypeVar
 
 from ..repositories.base import CRUDBase
 from ..schemas.pagination import Paginated, PaginationParams
+from ..schemas.sorting import SortingParams
 
 if TYPE_CHECKING:
     from beanie.odm.queries.find import FindMany
@@ -14,6 +15,7 @@ DataType = TypeVar("DataType")
 async def paginate(
     instance: "FindMany[DataType]",
     paging_params: PaginationParams,
+    sorting_params: SortingParams,
 ) -> tuple[Paginated, list[DataType]]:
     """Paginate the results of a database query."""
     # Count the total number of items matching the query
@@ -27,6 +29,9 @@ async def paginate(
         await instance
         .skip(paging_params.skip)
         .limit(paging_params.limit)
+        .sort(
+            (sorting_params.sort, sorting_params.order.direction),
+        )
         .to_list()
     )
 
