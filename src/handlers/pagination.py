@@ -1,8 +1,6 @@
-"""Formatter."""
+"""Pagination Handler."""
 import math
-from typing import TYPE_CHECKING, Generic, TypeVar, Union
-
-from pydantic import BaseModel
+from typing import TYPE_CHECKING, TypeVar
 
 from ..repositories.base import CRUDBase
 from ..schemas.pagination import Paginated, PaginationParams
@@ -11,13 +9,6 @@ if TYPE_CHECKING:
     from beanie.odm.queries.find import FindMany
 
 DataType = TypeVar("DataType")
-
-
-class GenericResponse(BaseModel, Generic[DataType]):
-    """Generic wrapper for API responses."""
-    message: str | None = None
-    data: Union[list[DataType], DataType, None] = None
-    paging: Paginated | None = None
 
 
 async def paginate(
