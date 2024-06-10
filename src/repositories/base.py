@@ -1,10 +1,13 @@
 """Base class for CRUD operations on database models."""
 from datetime import datetime
-from typing import Any, Generic, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Generic, Type, TypeVar, Union
 
 from beanie import Document
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+
+if TYPE_CHECKING:
+    from beanie.odm.queries.find import FindMany
 
 ModelType = TypeVar("ModelType", bound=Document)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -21,7 +24,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     Methods:
         get(id): Retrieve an instance based on its ID.
-        get_multi(skip, limit): Retrieve multiple instances based on skip and limit.
+        get_all_instance(): Retrieve all instances of the model.
+        count(instance): Count the total number of instances based on a query.
         create(obj_in): Create a new instance from a schema.
         update(db_obj, obj_in): Update an existing instance.
         remove(db_obj): Remove an existing instance.
@@ -40,23 +44,27 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         """Retrieve a single instance by its ID."""
         return await self.model.get(id)
 
-    async def get_multi(self, skip: int = 0, limit: int = 5000) -> list[ModelType | None]:
+    async def get_all_instance(self) -> "FindMany[ModelType]":
         """
-        Retrieve a list of instances, with pagination support.
-
-        Args:
-            skip (int): Number of instances to skip.
-            limit (int): Maximum number of instances to return.
+        Retrieve all instances of the model.
 
         Returns:
-            A list of model instances.
+            A query object to further refine or execute the query.
         """
-        return (
-            await self.model.find()
-            .skip(skip)
-            .limit(limit)
-            .to_list()
-        )
+        return self.model.find()
+
+    @classmethod
+    async def count(cls, instance: "FindMany[ModelType]") -> int:
+        """
+        Count the total number of instances based on a query.
+
+        Args:
+            instance (FindMany[ModelType]): The query object to count instances from.
+
+        Returns:
+            The total count of instances.
+        """
+        return await instance.count()
 
     async def create(self, obj_in: CreateSchemaType) -> ModelType:
         """
