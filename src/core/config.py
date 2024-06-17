@@ -2,11 +2,15 @@
 from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
+from ..consts.logging import LogLevel
+
 
 class Settings(BaseSettings):
 
     # Application
     API_PREFIX: str = "/api"
+    DEBUG: bool = False
+    LOG_LEVEL: str = LogLevel.INFO
 
     # MongoDB
     MONGO_USERNAME: str
