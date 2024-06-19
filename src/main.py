@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     lifespan=lifespan,
     responses={
-        status.HTTP_400_BAD_REQUEST: {
+        status.HTTP_422_UNPROCESSABLE_ENTITY: {
             "description": "Validation Error",
             "model": APIValidationError
         }
