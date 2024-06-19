@@ -104,7 +104,6 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             if field in update_data:
                 setattr(db_obj, field, update_data[field])
             if field == "updated_at":
-                breakpoint()
                 setattr(db_obj, field, datetime.now())
         await db_obj.save()
         return db_obj
