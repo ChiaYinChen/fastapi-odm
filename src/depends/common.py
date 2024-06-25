@@ -16,6 +16,6 @@ def get_pagination_params(
 def get_sorting_params(
     sort: str = Query("created_at", description="The field to sort by"),
     order: SortOrder = Query(SortOrder.ASC, description="The sorting order.")
-) -> PaginationParams:
+) -> SortingParams:
     """Get sorting parameters."""
     return SortingParams(sort=sort, order=order)
