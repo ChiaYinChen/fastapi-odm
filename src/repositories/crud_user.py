@@ -11,5 +11,9 @@ class CRUDUser(CRUDBase[UserModel, UserCreate, UserUpdate]):
         """Retrieve a user by their username."""
         return await UserModel.find_one(UserModel.username == username)
 
+    async def get_by_email(self, email: str) -> UserModel | None:
+        """Retrieve a user by their email."""
+        return await UserModel.find_one(UserModel.email == email)
+
 
 user = CRUDUser(UserModel)

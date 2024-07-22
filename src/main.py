@@ -5,8 +5,10 @@ from typing import Set
 
 from fastapi import FastAPI, status
 
+from .core.config import settings
 from .core.logging import configure_logging
 from .db.mongodb import start_async_mongodb
+from .routers import index, user
 from .schemas.exceptions import APIValidationError, CustomError
 
 
@@ -40,3 +42,6 @@ app = FastAPI(
         },
     }
 )
+
+app.include_router(index.router)
+app.include_router(user.router, prefix=f"{settings.API_PREFIX}/users", tags=["users"])
