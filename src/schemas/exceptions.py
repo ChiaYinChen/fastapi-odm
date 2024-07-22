@@ -39,3 +39,10 @@ class APIValidationError(BaseModel):
                 for err in exc.errors()  # iterate over each error in the Pydantic ValidationError
             ],
         )
+
+
+class CustomError(BaseModel):
+    """JSON response model for errors raised by :class:`CustomError`."""
+
+    code: str
+    message: Any
